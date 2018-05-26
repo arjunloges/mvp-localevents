@@ -1,21 +1,32 @@
 import React from 'react';
 
-class Search extends React.Component {
+export default class Search extends React.Component {
 	constructor(props){
 	  super(props)	
 	  this.state = {
-	  	term: ''
+	  	location: ''
 	  }
-
+    this.onChange = this.onChange.bind(this);
+    this.search = this.search.bind(this);
 	}
+
+  onChange (e){
+    this.setState({
+      location: e.target.value
+    })
+  }
+
+  search () {
+    this.props.onSearch(this.state.location);
+  }
 
   render(){
   	return(
   	  <div>
-  	    <input type='text' value={this.state.term}/>
-  	    <Button/>
+  	    <input value={this.state.location} onChange={this.onChange}/>
+
+  	    <button onClick={this.search}>Find Events</button>
   	  </div>)
   }
 };
 
-export default Search; 

@@ -1,6 +1,9 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import axios from 'axios'; 
+import Search from './components/search.jsx';
+import Events from './components/events.jsx';
+
 
 
 export default class App extends React.Component {
@@ -9,36 +12,35 @@ export default class App extends React.Component {
   	  this.state = {
   	  	events: []
   	  }
-  	this.search = this.search.bind(this)	
-  }
-
-  componentDidMount(e) {
-  	this.setState({
-  	  events: e.target.value
-  	})
+  	this.search = this.search.bind(this);	
   }
 
   search(location) {
   	// functionality from Search component with information sent back.
-  	axios.post('./events', { location })
-  	.then(res => {
-  		this.setState({
-  		  events: res.data
-  		})
+  	axios.post('/events', { location })
+  	.then((res) => {
+  	  return axios.get('/events/'+location)
   	})
-  	.then(() => {
-  	   axios.get('./events')
-  	})
+    .then(({data}) => {
+      console.log(data);
+      this.setState({
+        events: data 
+      })
+    })
+    .catch((err) => {
+      console.error(err)
+    })
   }
+
 
   render(){
   	return(
   	<div>
-  	   Hello 
+      <h1>EVENT FINDER</h1>
   	  <Search onSearch={this.search}/>
-  	  <Events events={this.state.events}/>
+  	   <Events events={this.state.events}/>
   	</div>)
   }
 };
 
-ReactDOM.render(<App/>, document.getElementById('app')); 
+ReactDOM.render(<App/>, document.getElementById('app'));
